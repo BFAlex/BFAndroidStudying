@@ -50,7 +50,10 @@ public class BFFragmentStatePagerActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return BFArrayListFragment.newInstance(position);
+            // 返回带ListView的fagment
+//            return BFArrayListFragment.newInstance(position);
+            // 返回最基本的fragment
+            return BFFragment.newInstance(position);
         }
 
         @Override
@@ -111,6 +114,53 @@ public class BFFragmentStatePagerActivity extends FragmentActivity {
         public void onDestroy() {
             super.onDestroy();
             Log.d("BFTag", "destroy: " + mNum);
+        }
+    }
+
+    /*
+    * 子类Fragment
+    * */
+    public static class BFFragment extends Fragment {
+        int fragmentNum;
+
+        static BFFragment newInstance(int num) {
+            BFFragment fragment = new BFFragment();
+
+            Bundle args = new Bundle();
+            args.putInt("num", num);
+            fragment.setArguments(args);
+
+            return fragment;
+        }
+
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            // 获取创建时传递的参数
+            fragmentNum = getArguments().getInt("num");
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+//            return super.onCreateView(inflater, container, savedInstanceState);
+            View fragmentView = inflater.inflate(R.layout.fragment_normal, container, false);
+            ((TextView)fragmentView.findViewById(R.id.fragment_txt)).setText("fragment #:" + fragmentNum);
+
+            return fragmentView;
+        }
+
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            Log.d("BFTag", "fragment created: " + fragmentNum);
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            Log.d("BFTag", "fragment destoried: " + fragmentNum);
         }
     }
 }
